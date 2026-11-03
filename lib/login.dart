@@ -13,11 +13,21 @@ class _LoginPageState extends State<LoginPage> {
   final username = TextEditingController();
   final password = TextEditingController();
   bool showPassword = false;
+  String? registeredUsername;
+  String? registeredPassword;
 
   void login() {
     if (username.text.trim().isEmpty || password.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
+    if (username.text.trim() != registeredUsername ||
+        password.text != registeredPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Username or password is incorrect')),
       );
       return;
     }
@@ -33,11 +43,18 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void register() {
-    Navigator.push(
+  Future<void> register() async {
+    final account = await Navigator.push<Map<String, String>>(
       context,
       MaterialPageRoute(builder: (_) => const RegisterPage()),
     );
+
+    if (account != null && mounted) {
+      setState(() {
+        registeredUsername = account['username'];
+        registeredPassword = account['password'];
+      });
+    }
   }
 
   @override

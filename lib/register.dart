@@ -81,7 +81,10 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    Navigator.pop(context);
+    Navigator.pop<Map<String, String>>(context, {
+      'username': username.text.trim(),
+      'password': password.text,
+    });
   }
 
   @override
